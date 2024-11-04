@@ -1,33 +1,27 @@
 // Jenkinsfile
 pipeline {
     agent any
+
     stages {
-        stage('Build Docker Image') {
+        stage('Сборка Docker Image') {
             steps {
                 script {
-                    // Создание Docker образа
-                    def app = docker.build("mercurybigpencil/hello-world-app:latest")
+                   sh 'docker build -t "mercurybigpencil/hello-world-app" .'
                 }
             }
         }
-
-        stage('Run Tests') {
+        stage('Запуск тестов') {
             steps {
                 script {
-                    // Запуск контейнера для тестирования
-                    app.inside {
-                        sh 'npm test'  // или другой тестовый скрипт
-                    }
+                    sh 'npm test'
                 }
             }
         }
-
-        stage('Push to Docker Hub') {
+        stage('Загрузка в Docker Hub') {
             steps {
                 script {
-                    // Вход в Docker Hub и загрузка образа
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        app.push()
+                    docker.withRegistry('https://registry-1.docker.io/', 'dockerhub-credentials-id') {
+                        docker.image('mercurybigpencil/hello-world-app').push('latest')
                     }
                 }
             }
