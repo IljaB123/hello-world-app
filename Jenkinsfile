@@ -1,7 +1,9 @@
 // Jenkinsfile
 pipeline {
     agent any
-    DOCKER_IMAGE = 'mercurybigpencil/hello-world-app'
+    environment {
+        DOCKER_IMAGE = 'your_dockerhub_username/hello-world-app'
+    }
     stages {
         stage('Сборка Docker-образа') {
             steps {
