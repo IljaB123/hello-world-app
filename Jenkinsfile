@@ -1,34 +1,33 @@
 // Jenkinsfile
 pipeline {
     agent any
-    environment {
-        DOCKER_IMAGE = 'your_dockerhub_username/hello-world-app'
-    }
     stages {
-        stage('Сборка Docker-образа') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(DOCKER_IMAGE)
+                    // Создание Docker образа
+                    def app = docker.build("mercurybigpencil/hello-world-app:latest")
                 }
             }
         }
-        stage('Запуск тестов') {
+
+        stage('Run Tests') {
             steps {
                 script {
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'npm test'
+                    // Запуск контейнера для тестирования
+                    app.inside {
+                        sh 'npm test'  // или другой тестовый скрипт
                     }
                 }
             }
         }
-        stage('Отправка в Docker Hub') {
-            when {
-                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
-            }
+
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        docker.image(DOCKER_IMAGE).push('latest')
+                    // Вход в Docker Hub и загрузка образа
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        app.push()
                     }
                 }
             }
