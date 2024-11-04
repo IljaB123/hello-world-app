@@ -1,9 +1,7 @@
 // Jenkinsfile
 pipeline {
     agent any
-    environment {
-        DOCKER_IMAGE = 'mercurybigpencil/hello-world-app'
-    }
+    DOCKER_IMAGE = 'mercurybigpencil/hello-world-app'
     stages {
         stage('Сборка Docker-образа') {
             steps {
@@ -34,4 +32,4 @@ pipeline {
             }
         }
     }
-}x
+}
