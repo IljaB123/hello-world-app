@@ -22,7 +22,6 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry-1.docker.io/', 'dockerhub-credentials-id') {
                         docker.image('mercurybigpencil/hello-world-app').push('latest')
-                        app.push()
                     }
                 }
             }
